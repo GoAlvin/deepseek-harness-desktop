@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'unsafe-inline'; img-src data:"
+    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepSeek Harness</title>
+    <style>
+      :root { color-scheme: light dark; }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #f7f7f5;
+        color: #202124;
+        font: 14px/1.5 Inter, "Segoe UI", "Microsoft YaHei UI", sans-serif;
+      }
+      main { display: grid; justify-items: center; gap: 18px; }
+      .mark {
+        width: 48px;
+        height: 48px;
+        border-radius: 15px;
+        display: grid;
+        place-items: center;
+        color: white;
+        background: linear-gradient(145deg, #4f7cff, #3157d5);
+        box-shadow: 0 12px 30px rgb(49 87 213 / 25%);
+        font-size: 23px;
+        font-weight: 650;
+      }
+      .copy { display: grid; justify-items: center; gap: 3px; }
+      .title { font-size: 16px; font-weight: 600; }
+      .subtitle { color: #6f7378; }
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgb(79 124 255 / 20%);
+        border-top-color: #4f7cff;
+        border-radius: 50%;
+        animation: spin .8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @media (prefers-color-scheme: dark) {
+        body { background: #17181a; color: #f0f1f2; }
+        .subtitle { color: #9da1a8; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner { animation-duration: 1.8s; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">D</div>
+      <div class="copy">
+        <div class="title">DeepSeek Harness</div>
+        <div class="subtitle">正在启动本地工作区…</div>
+      </div>
+      <div class="spinner" role="status" aria-label="Loading"></div>
+    </main>
+  </body>
+</html>

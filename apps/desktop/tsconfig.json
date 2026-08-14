@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "noEmit": true,
+    "rootDir": ".",
+    "types": [
+      "node",
+      "electron"
+    ]
+  },
+  "include": [
+    "src",
+    "tests",
+    "tsdown.config.ts"
+  ]
+}
