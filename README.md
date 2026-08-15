@@ -2,6 +2,8 @@
 
 English | [中文](README.zh.md)
 
+![DeepSeek Harness Desktop hero](assets/desktop-hero.png)
+
 DeepSeek Harness Desktop is an independent, open-source Windows desktop distribution built from [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness). It packages the complete Harness Web interface, local agent runtime, native directory picker, and supervised backend into one Electron application.
 
 This community distribution is not an official DeepSeek desktop release. The upstream Harness architecture and package sources remain attributed to DeepSeek AI under the [MIT license](LICENSE).
@@ -15,6 +17,12 @@ Download the Windows x64 installer from the [latest desktop release](https://git
 
 The installer is not code-signed. Windows SmartScreen may display an unknown-publisher warning. Verify the SHA-256 digest before running the installer.
 
+## Application preview
+
+This screenshot shows the packaged Windows application running a real Harness session.
+
+![DeepSeek Harness Desktop running on Windows](assets/desktop-screenshot.png)
+
 ## Features
 
 - Complete DeepSeek Harness Web UI in a native desktop window.
@@ -24,6 +32,10 @@ The installer is not code-signed. Windows SmartScreen may display an unknown-pub
 - Custom application, installer, Start menu, and desktop shortcut icons.
 - Packaged Koffi, Sharp, ripgrep, and `node-pty` native runtime support.
 - Per-user Harness profiles, settings, credentials, and session persistence.
+
+The desktop host keeps the selected workspace, local backend, and agent capabilities inside one loopback-only application boundary.
+
+![DeepSeek Harness Desktop workspace and capability flow](assets/desktop-workflow.png)
 
 <a id="run"></a>
 

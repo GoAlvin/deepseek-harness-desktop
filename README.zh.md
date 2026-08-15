@@ -2,6 +2,8 @@
 
 [English](README.md) | 中文
 
+![DeepSeek Harness Desktop 项目横幅](assets/desktop-hero.png)
+
 DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，基于 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 构建。它将完整的 Harness Web 界面、本地智能体运行时、原生目录选择器和受控后端封装到一个 Electron 应用中。
 
 这是社区维护的独立发行版，并非 DeepSeek 官方桌面客户端。上游 Harness 的架构与 package 源码仍归属 DeepSeek AI，并按 [MIT 许可证](LICENSE)保留署名。
@@ -15,6 +17,12 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 
 安装包尚未进行代码签名，Windows SmartScreen 可能显示“未知发布者”警告。运行安装包前请核对 SHA-256 摘要。
 
+## 运行效果
+
+下图展示了打包后的 Windows 应用运行真实 Harness 会话的界面。
+
+![DeepSeek Harness Desktop 在 Windows 上运行](assets/desktop-screenshot.png)
+
 ## 功能
 
 - 在原生桌面窗口中提供完整的 DeepSeek Harness Web UI。
@@ -24,6 +32,10 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 - 自定义应用、安装器、开始菜单与桌面快捷方式图标。
 - 打包 Koffi、Sharp、ripgrep 和 `node-pty` 原生运行时。
 - 支持用户级 Harness profile、设置、凭据与会话持久化。
+
+桌面宿主将所选工作区、本地后端和智能体能力统一置于仅限 loopback 的应用边界内。
+
+![DeepSeek Harness Desktop 工作区与能力流程](assets/desktop-workflow.png)
 
 <a id="run"></a>
 
