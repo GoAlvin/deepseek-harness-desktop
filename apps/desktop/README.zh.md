@@ -18,6 +18,12 @@
 
 该 workspace package 保持私有，因为受支持的分发形式是 NSIS 安装包，而不是 npm tarball。
 
+## 窗口与外观
+
+在 Windows 上，Electron 会隐藏普通标题栏，并通过 Window Controls Overlay 保留原生最小化、最大化和关闭按钮。窗口顶部的 8 像素拖动区域可用于移动窗口，同时不会让 Harness 工具栏或侧边栏控件失去点击能力。renderer 仍然不会获得 Electron bridge。
+
+Web profile 内置采用 MIT 许可的 [Aqua 外观插件](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin)。Aqua 默认开启，可提供玻璃材质、流体或自定义图片／视频背景、亮度与模糊调节、粒子鲸鱼、海洋环境装饰和指针效果。总开关位于**设置 → 插件 → 玻璃主题**，详细调节项位于**设置 → 通用设置 → 外观**。关闭总开关即可恢复原生界面，不会改变桌面宿主。
+
 ## 运行时约定
 
 Electron 主进程在随机 `127.0.0.1` 端口上启动已构建的 [`dsh web`](../cli/README.md) profile。桌面应用自有的 Harness 状态存储在 Electron 的用户级应用数据目录下，具体位于 `harness/`；除非继承环境显式覆盖 `DSH_TELEMETRY_DISABLED`，否则遥测保持关闭。
@@ -34,9 +40,9 @@ Harness HTTP 服务仅监听 loopback。对于已经以同一本地用户身份�
 
 ## 验证
 
-`pnpm run test:desktop` 覆盖后端 URL 校验、导航策略、由父进程负责的 CLI 关闭以及桌面选择器 IPC 生命周期。桌面可执行文件接受 `--smoke-test`，执行隐藏的启动、加载与关闭检查。`tests/packaged-native-smoke.cjs` 验证 Windows 打包运行时能够加载 Koffi、Sharp、ripgrep 和 `node-pty`；选择器 smoke 分别覆盖独立 fallback worker 和完整 Electron 父进程后端 RPC 路径。
+`pnpm run test:desktop` 覆盖后端 URL 校验、导航策略、无标题栏窗口选项、由父进程负责的 CLI 关闭以及桌面选择器 IPC 生命周期。桌面可执行文件接受 `--smoke-test`，执行隐藏的启动、加载与关闭检查。`tests/packaged-native-smoke.cjs` 验证 Windows 打包运行时能够加载 Koffi、Sharp、ripgrep 和 `node-pty`；选择器 smoke 分别覆盖独立 fallback worker 和完整 Electron 父进程后端 RPC 路径。
 
-桌面壳不会改变模型可见行为。现有 Web profile snapshot 继续覆盖产品行为；Electron 与打包原生模块 smoke 覆盖新增的宿主边界。
+桌面壳不会改变模型可见行为。Web 浏览器 snapshot 覆盖组装后的 Aqua 设置和插件名录；Electron 与打包原生模块 smoke 覆盖宿主进程与窗口行为。
 
 ## 当前限制
 

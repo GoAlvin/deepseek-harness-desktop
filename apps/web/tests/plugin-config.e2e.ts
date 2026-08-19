@@ -80,6 +80,8 @@ describe('web e2e: plugin configuration section', () => {
     await dialog.getByText('终端', { exact: true }).waitFor({ timeout: 10_000 })
     expect(await dialog.getByText('Agent 循环', { exact: true }).count()).toBe(1)
     expect(await dialog.getByText('网页搜索', { exact: true }).count()).toBe(1)
+    expect(await dialog.getByText('玻璃主题', { exact: true }).count()).toBe(1)
+    expect(await dialog.getByRole('button', { name: '开启', exact: true }).getAttribute('aria-pressed')).toBe('true')
     // Collapsed: a card's fields appear only once it is expanded.
     expect(await dialog.getByLabel('命令超时（毫秒）').count()).toBe(0)
 

@@ -18,6 +18,12 @@ The installer assigns the supplied product mark to the application and its short
 
 This workspace package remains private because the supported distribution is the NSIS installer, not an npm tarball.
 
+## Window and appearance
+
+On Windows, Electron hides the ordinary title row and keeps its native minimize, maximize, and close buttons in a Window Controls Overlay. An 8-pixel drag strip at the top moves the window without making the Harness toolbar or sidebar controls unclickable. The renderer still receives no Electron bridge.
+
+The Web profile includes the MIT-licensed [Aqua appearance plugin](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin). Aqua starts enabled and provides glass material, fluid or custom image/video backgrounds, brightness and blur controls, a particle whale, ambient marine decorations, and pointer effects. Its master switch is under **Settings → Plugins → Glass theme**; the detailed controls are under **Settings → General → Appearance**. Turning the master switch off restores the stock interface without changing the desktop host.
+
 ## Runtime contract
 
 The Electron main process starts the built [`dsh web`](../cli/README.md) profile on a random `127.0.0.1` port. It stores desktop-owned Harness state below Electron's per-user application-data directory, under `harness/`, and disables telemetry unless `DSH_TELEMETRY_DISABLED` is explicitly overridden in the inherited environment.
@@ -34,9 +40,9 @@ The Harness HTTP server listens only on loopback. It is not an authentication bo
 
 ## Verification
 
-`pnpm run test:desktop` covers backend URL validation, navigation policy, parent-owned CLI shutdown, and the desktop picker IPC lifecycle. The desktop executable accepts `--smoke-test` for a hidden startup/load/shutdown pass. `tests/packaged-native-smoke.cjs` verifies the packaged Windows runtime can load Koffi, Sharp, ripgrep, and `node-pty`; the picker smokes cover the standalone fallback worker and the complete Electron-parent backend RPC path.
+`pnpm run test:desktop` covers backend URL validation, navigation policy, frameless-window options, parent-owned CLI shutdown, and the desktop picker IPC lifecycle. The desktop executable accepts `--smoke-test` for a hidden startup/load/shutdown pass. `tests/packaged-native-smoke.cjs` verifies the packaged Windows runtime can load Koffi, Sharp, ripgrep, and `node-pty`; the picker smokes cover the standalone fallback worker and the complete Electron-parent backend RPC path.
 
-The desktop shell does not change model-visible behavior. Existing Web-profile snapshots remain the product-behavior coverage; the Electron and packaged-native smokes cover the new host boundary.
+The desktop shell does not change model-visible behavior. Web browser snapshots cover the assembled Aqua settings and plugin inventory; the Electron and packaged-native smokes cover the host process and window behavior.
 
 ## Current limitations
 

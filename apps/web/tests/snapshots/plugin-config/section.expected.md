@@ -29,6 +29,11 @@
           - text: 终端 限制 agent 运行的每一条命令。
           - img
       - listitem:
+        - text: 玻璃主题 全局玻璃质感，云母/兼容双模式，模糊度、磨砂度、背景与颜色都可自由调节
+        - button "开启" [pressed]:
+          - img
+          - text: 开启
+      - listitem:
         - 'button "展开设置: Agent 循环"':
           - text: Agent 循环 Agent 如何派发工具调用。
           - img

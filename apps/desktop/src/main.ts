@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { app, BrowserWindow, dialog, Menu, session, shell } from 'electron'
 import { startHarnessBackend, type HarnessBackend } from './backend.ts'
 import { isAllowedNavigation, isExternalWebUrl } from './navigation.ts'
+import { WINDOW_DRAG_REGION_CSS, windowFrameOptions } from './window-frame.ts'
 
 const APP_NAME = 'DeepSeek Harness'
 const SMOKE_FLAG = '--smoke-test'
@@ -78,6 +79,7 @@ function createWindow(): BrowserWindow {
     icon: iconPath,
     backgroundColor: '#f7f7f5',
     autoHideMenuBar: process.platform !== 'darwin',
+    ...windowFrameOptions(process.platform),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
@@ -99,6 +101,11 @@ function createWindow(): BrowserWindow {
     return { action: 'deny' }
   })
   created.webContents.on('will-attach-webview', (event) => { event.preventDefault() })
+  created.webContents.on('did-finish-load', () => {
+    void created.webContents.insertCSS(WINDOW_DRAG_REGION_CSS).catch((error: unknown) => {
+      console.error('DeepSeek Harness desktop: failed to install the window drag region', error)
+    })
+  })
   created.once('ready-to-show', () => {
     if (!smokeTest) created.show()
   })

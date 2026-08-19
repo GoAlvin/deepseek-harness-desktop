@@ -34,6 +34,10 @@ Plugin packages remain under `resources/app/node_modules` with ASAR disabled. Th
 
 The BrowserWindow enables context isolation, Chromium sandboxing, and Web security while disabling Node integration. Permission requests and webviews are denied. Top-level navigation is allowlisted to the loading document and the exact backend origin; new windows are denied, while ordinary HTTP and HTTPS links are delegated to the operating-system browser.
 
+On Windows, the BrowserWindow uses Electron's hidden title-bar style and native Window Controls Overlay. The renderer receives a narrow CSS drag region through `webContents.insertCSS`; it receives no preload bridge or window-control IPC. Native minimize, maximize, and close buttons therefore remain Electron-owned while the ordinary title row is absent.
+
+The Web bundle pins `dsh-client-ui-aqua` as an external MIT-licensed runtime dependency and mounts it in the shipped browser roster. Aqua owns its local appearance preferences and removes all of its effects when its settings switch is disabled. The desktop host does not fork or modify the plugin source, and the plugin receives only the same client services available to other Web roster entries.
+
 The random server port listens only on `127.0.0.1`. This prevents remote network exposure but does not authenticate against another process running as the same local user. The port must not be proxied or rebound outside loopback without adding an authentication boundary.
 
 ## Alternatives considered
@@ -46,8 +50,12 @@ The random server port listens only on `127.0.0.1`. This prevents remote network
 
 **Package every module inside ASAR and unpack only native files.** Rejected: the profile module-fallback contract requires real Junction targets for JavaScript packages as well as native binaries.
 
+**Set `frame: false` and implement custom window buttons through a preload bridge.** Rejected: hidden title-bar mode removes the title row while retaining Electron-owned controls. Custom controls would add renderer-to-main IPC and platform-specific window-state handling without improving the requested result.
+
+**Vendor or copy Aqua into the application.** Rejected: the published package exposes the standard Harness client-plugin entry and has a compatible MIT license. Pinning the npm dependency preserves its upstream identity, integrity metadata, and independent update path.
+
 ## Consequences
 
-The application now builds, launches, and shuts down as a Windows desktop product while reusing the complete Web interface. Development and packaged startup smokes cover the new host boundary; the existing Web snapshot suite remains responsible for model-visible behavior because the host adds none.
+The application builds, launches, and shuts down as a Windows desktop product while reusing the complete Web interface. Desktop tests pin the title-bar options and drag region, packaged startup smokes cover the host process, and Web browser snapshots cover the Aqua settings and roster entry. The host and appearance layer add no model-visible behavior.
 
-The installer is large, its plugin tree is inspectable on disk, and it currently has no publisher certificate or automatic updater. The first packaging target is Windows x64. Other platforms need their own native-runtime and installer validation before being declared supported.
+The installer is large, its plugin tree is inspectable on disk, and it currently has no publisher certificate or automatic updater. The first packaging target is Windows x64. Other platforms need their own native-runtime and installer validation before being declared supported. Aqua remains third-party code pinned by the Web bundle; adopting a later release requires the same browser and packaged-runtime verification as any other roster change.

@@ -39,6 +39,49 @@
   - button "跟随系统" [pressed]:
     - img
     - text: 跟随系统
+  - text: 模式
+  - group "模式":
+    - button "云母效果" [pressed]
+    - button "兼容模式"
+  - text: 玻璃材质 玻璃模糊度
+  - slider "玻璃模糊度 20 px": "20"
+  - spinbutton: "20"
+  - text: px 磨砂度
+  - slider "磨砂度 7 %": "7"
+  - spinbutton: "7"
+  - text: "% 背景"
+  - group "背景":
+    - button "流体" [pressed]
+    - button "壁纸"
+  - text: 色调
+  - slider "色调 320 °": "320"
+  - spinbutton: "320"
+  - text: ° 颜色深浅
+  - slider "颜色深浅 25 %": "25"
+  - spinbutton: "25"
+  - text: "% 背景亮度"
+  - slider "背景亮度 50 %": "50"
+  - spinbutton: "50"
+  - text: "% 浅色模式：50 原样，100 提亮至纯白 环境装饰 粒子鲸鱼"
+  - button "开启" [pressed]:
+    - img
+    - text: 开启
+  - text: 小鱼
+  - button "开启" [pressed]:
+    - img
+    - text: 开启
+  - text: 网状交互
+  - button "开启" [pressed]:
+    - img
+    - text: 开启
+  - text: 悬停效果 鼠标辉光
+  - button "开启" [pressed]:
+    - img
+    - text: 开启
+  - text: 悬停下压
+  - button "开启" [pressed]:
+    - img
+    - text: 开启
   - text: 繁忙时 Enter 键行为 仅在智能体运行时生效；Cmd/Ctrl+Enter 使用另一行为
   - button "排队发送":
     - text: 排队发送

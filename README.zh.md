@@ -10,9 +10,9 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 
 ## 下载
 
-从[最新桌面版 Release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.7)下载 Windows x64 安装包：
+从[最新桌面版 Release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.8)下载 Windows x64 安装包：
 
-- `DeepSeek-Harness-0.1.0-rc.7-x64.exe`
+- `DeepSeek-Harness-0.1.0-rc.8-x64.exe`
 - SHA-256：`C9076856499C78DCD51F4885B068AEEB128A7113A4300540F1E795FBECB7D9AD`
 
 安装包尚未进行代码签名，Windows SmartScreen 可能显示“未知发布者”警告。运行安装包前请核对 SHA-256 摘要。

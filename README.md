@@ -10,9 +10,9 @@ This community distribution is not an official DeepSeek desktop release. The ups
 
 ## Download
 
-Download the Windows x64 installer from the [latest desktop release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.7):
+Download the Windows x64 installer from the [latest desktop release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.8):
 
-- `DeepSeek-Harness-0.1.0-rc.7-x64.exe`
+- `DeepSeek-Harness-0.1.0-rc.8-x64.exe`
 - SHA-256: `C9076856499C78DCD51F4885B068AEEB128A7113A4300540F1E795FBECB7D9AD`
 
 The installer is not code-signed. Windows SmartScreen may display an unknown-publisher warning. Verify the SHA-256 digest before running the installer.

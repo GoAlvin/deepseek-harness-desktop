@@ -34,6 +34,10 @@ Windows x64 分发使用 Electron Builder 和 NSIS，并将提供的产品图标
 
 BrowserWindow 启用上下文隔离、Chromium sandbox 和 Web security，同时禁用 Node 集成。权限请求和 webview 均被拒绝。顶层导航只允许启动页文档和确切的后端 origin；新窗口会被拒绝，普通 HTTP 与 HTTPS 链接则交给操作系统浏览器。
 
+在 Windows 上，BrowserWindow 使用 Electron 的隐藏标题栏样式和原生 Window Controls Overlay。renderer 仅通过 `webContents.insertCSS` 获得狭窄的 CSS 拖动区域，不会获得 preload bridge 或窗口控制 IPC。因此，原生最小化、最大化和关闭按钮仍由 Electron 持有，而普通标题栏不会显示。
+
+Web bundle 将 `dsh-client-ui-aqua` 固定为采用 MIT 许可的外部运行时依赖，并在随附浏览器名录中挂载它。Aqua 持有自己的本地外观偏好设置，在设置开关关闭后会移除它的全部效果。桌面宿主不会分叉或修改插件源码；该插件只能获得其他 Web 名录条目同样可用的客户端服务。
+
 随机服务端口只监听 `127.0.0.1`。这会阻止远程网络暴露，但不会对以同一本地用户身份运行的其他进程进行身份认证。在增加身份认证边界之前，不得通过代理暴露该端口，也不得将其重新绑定到 loopback 之外。
 
 ## 曾考虑的替代方案
@@ -46,8 +50,12 @@ BrowserWindow 启用上下文隔离、Chromium sandbox 和 Web security，同时
 
 **将所有模块放入 ASAR，只解包原生文件。** 不予采用：profile 模块 fallback 约定要求 JavaScript package 与原生二进制文件都具备真实的 Junction 目标。
 
+**设置 `frame: false`，并通过 preload bridge 实现自定义窗口按钮。** 不予采用：隐藏标题栏模式可以在移除标题栏的同时保留由 Electron 持有的控件。自定义控件会增加 renderer 到主进程的 IPC 和平台专用窗口状态处理，却不会改善所需结果。
+
+**将 Aqua 复制或 vendoring 到应用内。** 不予采用：已发布 package 提供标准 Harness 客户端插件入口，并采用兼容的 MIT 许可。固定 npm 依赖可以保留其上游身份、完整性元数据和独立更新路径。
+
 ## 后果
 
-应用现在能够以 Windows 桌面产品的形态构建、启动和关闭，同时复用完整 Web 界面。开发版与打包版启动 smoke 覆盖新增宿主边界；宿主没有增加模型可见行为，因此现有 Web snapshot suite 继续负责该部分覆盖。
+应用能够以 Windows 桌面产品的形态构建、启动和关闭，同时复用完整 Web 界面。桌面测试固定标题栏选项和拖动区域，打包版启动 smoke 覆盖宿主进程，Web 浏览器 snapshot 覆盖 Aqua 设置与名录条目。宿主和外观层都不会增加模型可见行为。
 
-安装包体积较大，插件树可在磁盘上检查，并且当前没有发布者证书或自动更新器。首个打包目标是 Windows x64；其他平台必须分别完成原生运行时与安装器验证，才能声明支持。
+安装包体积较大，插件树可在磁盘上检查，并且当前没有发布者证书或自动更新器。首个打包目标是 Windows x64；其他平台必须分别完成原生运行时与安装器验证，才能声明支持。Aqua 仍然是由 Web bundle 固定版本的第三方代码；采用后续版本时，必须像其他名录变更一样完成浏览器与打包运行时验证。
