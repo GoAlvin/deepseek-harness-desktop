@@ -181,6 +181,7 @@
       "@deepseek-ai/dsh-api-remotes": ["./packages/api/remotes/src"],
       "@deepseek-ai/dsh-api-remotes/client": ["./packages/api/remotes/src/client/index.ts"],
       "@deepseek-ai/dsh-client-hmr": ["./packages/client/hmr/src"],
+      "@deepseek-ai/dsh-client-mobile-web": ["./packages/client/mobile-web/src"],
       "@deepseek-ai/dsh-client-modules": ["./packages/client/modules/src"],
       "@deepseek-ai/dsh-client-runtime": ["./packages/client/runtime/src"],
       "@deepseek-ai/dsh-client-runtime/client": ["./packages/client/runtime/src/client"],

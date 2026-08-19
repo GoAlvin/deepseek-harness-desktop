@@ -8,6 +8,14 @@ dsh 浏览器表层组合包。[`cordis.patch.yml`](cordis.patch.yml) 叠加在 
 
 随附名录默认启用采用 MIT 许可的外部 [Aqua 插件](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin)。它添加可完全撤销的玻璃材质层和外观调节项，不会改变模型请求或会话数据。用户可在**设置 → 插件 → 玻璃主题**中关闭该层，并在**设置 → 通用设置 → 外观**中调节材质、背景、环境装饰和指针效果。
 
+## 费用统计
+
+随附名录将采用 MIT 许可的外部 [dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) 固定在 `1.5.19`。它将今日费用放在设置按钮正上方，会话费用默认保留在输入区下方，并在**设置 → 费用**中提供汇总费用、预算、官方余额与 Coding Plan 查询、历史记录、Token 热图、峰谷计价、自定义 Provider 余额支持和价格同步。供应商密钥由 Host credentials 服务解析，不会发送到浏览器；自定义余额查询默认关闭。本地账本位于 `$DSH_HOME/storages/cost-meter/ledger.json`，不会修改工作区文件或会话消息。
+
+## 手机浏览器访问
+
+随附名录挂载 [`dsh-client-mobile-web`](../../client/mobile-web/README.md)。**设置 → 手机访问**会提供经过身份校验的局域网二维码，以及需要主动开启的临时公网 HTTPS 二维码。总开关会关闭两种传输并使相应链接失效。公网访问运行固定版本的 Cloudflare Quick Tunnel，其可选二进制下载会显示字节数和传输速度进度；这是浏览器表层，不是手机应用。
+
 ## 模型体验
 
 ### Harness 源码与 Web 表层上下文

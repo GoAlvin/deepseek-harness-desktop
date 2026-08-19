@@ -1,0 +1,24 @@
+{
+  "extends": "../../../tsconfig.base.client.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.client.tsbuildinfo"
+  },
+  "files": [
+    "src/css-modules.d.ts",
+    "src/client/index.ts",
+    "src/client/locales.ts",
+    "src/client/MobileWebSection.tsx",
+    "src/protocol.ts"
+  ],
+  "references": [
+    { "path": "../../../vendor/cordis" },
+    { "path": "../connection/tsconfig.client.json" },
+    { "path": "../runtime" },
+    { "path": "../locale" },
+    { "path": "../ui-settings" },
+    { "path": "../ui-slots" },
+    { "path": "../../host/apiproxy" }
+  ]
+}

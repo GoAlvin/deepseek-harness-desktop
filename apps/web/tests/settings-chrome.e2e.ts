@@ -52,6 +52,12 @@ describe('web e2e: settings modal and General preferences', () => {
   it('opens the settings dialog, switches sections, and closes by every path', async () => {
     onTestFailed(() => saveFailureShot(page, 'web-e2e-settings-shell'))
     const trigger = page.getByRole('button', { name: '设置', exact: true })
+    const costFooter = page.locator('.cm-footer-stack')
+    await costFooter.waitFor({ timeout: 10_000 })
+    await expect.poll(() => costFooter.textContent(), { timeout: 5_000 }).toContain('今日')
+    const footerBottom = await costFooter.evaluate(element => element.getBoundingClientRect().bottom)
+    const settingsTop = await trigger.evaluate(element => element.getBoundingClientRect().top)
+    expect(footerBottom).toBeLessThanOrEqual(settingsTop)
     expect(await trigger.getAttribute('aria-haspopup')).toBe('dialog')
     expect(await trigger.getAttribute('aria-expanded')).toBe('false')
     await trigger.click()
@@ -104,8 +110,10 @@ describe('web e2e: settings modal and General preferences', () => {
     await dialog.getByRole('tab', { name: '插件列表', exact: true }).click()
     const pluginRow = dialog.locator(PLUGIN_ROW_SELECTOR)
     const aquaRow = dialog.locator('[data-plugin-entry$="ui-aqua"]')
+    const costMeterRow = dialog.locator('[data-plugin-entry$="cost-meter"]')
     await pluginRow.waitFor({ timeout: 10_000 })
     await aquaRow.waitFor({ timeout: 10_000 })
+    await costMeterRow.waitFor({ timeout: 10_000 })
     const expectedPluginCount = [...scaffold.ctx.loader.entries()]
       .filter(entry => !entry.options.group)
       .length
@@ -122,6 +130,14 @@ describe('web e2e: settings modal and General preferences', () => {
       scaffold.workspaceCwd,
     )
     await compareOrRefreshGolden(PLUGINS_EXPECTED, pluginsSnapshot, MODE)
+    const costSection = dialog.getByRole('button', { name: '费用', exact: true })
+    await costSection.click()
+    expect(await costSection.getAttribute('aria-current')).toBe('true')
+    await dialog.getByText('Token 用量统计', { exact: true }).waitFor({ timeout: 10_000 })
+    await dialog.getByText('今日费用', { exact: true }).first().waitFor({ timeout: 10_000 })
+    expect(await dialog.locator('input[type="password"]').evaluateAll(
+      inputs => inputs.every(input => (input as HTMLInputElement).value === ''),
+    )).toBe(true)
     // Close path 1: Escape.
     await page.keyboard.press('Escape')
     await expect.poll(() => page.getByRole('dialog', { name: '设置' }).count(), { timeout: 5_000 }).toBe(0)

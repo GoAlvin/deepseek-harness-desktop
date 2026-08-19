@@ -27,6 +27,8 @@ linkWorkspacePackages: true
 overrides:
   '@deepseek-ai/cosmokit': 'link:vendor/cosmokit'
   '@deepseek-ai/schemastery': 'link:vendor/schemastery'
+  'dsh-cost-meter>@deepseek-ai/dsh-credentials': '0.1.0-rc.6'
+  'dsh-cost-meter>@deepseek-ai/dsh-home-paths': '0.1.0-rc.6'
 
 peerDependencyRules:
   allowedVersions:
@@ -69,6 +71,7 @@ minimumReleaseAgeExclude:
   - node-addon-require-builtin-win32-ia32-msvc@0.1.4
   - node-addon-require-builtin-win32-x64-msvc@0.1.4
   - node-addon-require-builtin@0.1.4
+  - dsh-cost-meter@1.5.19
 
 patchedDependencies:
   node-pty@1.1.0: patches/node-pty@1.1.0.patch

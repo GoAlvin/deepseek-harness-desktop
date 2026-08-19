@@ -34,9 +34,11 @@ Windows x64 分发使用 Electron Builder 和 NSIS，并将提供的产品图标
 
 BrowserWindow 启用上下文隔离、Chromium sandbox 和 Web security，同时禁用 Node 集成。权限请求和 webview 均被拒绝。顶层导航只允许启动页文档和确切的后端 origin；新窗口会被拒绝，普通 HTTP 与 HTTPS 链接则交给操作系统浏览器。
 
-在 Windows 上，BrowserWindow 使用 Electron 的隐藏标题栏样式和原生 Window Controls Overlay。renderer 仅通过 `webContents.insertCSS` 获得狭窄的 CSS 拖动区域，不会获得 preload bridge 或窗口控制 IPC。因此，原生最小化、最大化和关闭按钮仍由 Electron 持有，而普通标题栏不会显示。
+在 Windows 上，BrowserWindow 使用 Electron 的隐藏标题栏样式和原生 Window Controls Overlay。通过 `webContents.insertCSS` 注入的 CSS 会为报告的 `titlebar-area-height` 预留空间，并以 36 像素作为回退值；拖动区域采用报告的 overlay 矩形，无法取得时则在右侧为原生按钮预留 144 像素。完整 Web 界面从该区域下方开始。renderer 不会获得 preload bridge 或窗口控制 IPC。因此，原生最小化、最大化和关闭按钮仍由 Electron 持有，而普通标题栏不会显示。非 Windows 平台不会采用 Windows 避让尺寸。
 
 Web bundle 将 `dsh-client-ui-aqua` 固定为采用 MIT 许可的外部运行时依赖，并在随附浏览器名录中挂载它。Aqua 持有自己的本地外观偏好设置，在设置开关关闭后会移除它的全部效果。桌面宿主不会分叉或修改插件源码；该插件只能获得其他 Web 名录条目同样可用的客户端服务。
+
+Web bundle 还将采用 MIT 许可的外部 `dsh-cost-meter` package 固定在 `1.5.19`，并挂载一个独立 Cordis 行。该插件持有自己的 `costMeter` Remote 服务、费用设置分节、输入区摘要和 `sidebar.footer.action` 贡献。Harness credentials 留在 Host 端，自定义余额查询默认关闭。插件账本存放在 `$DSH_HOME/storages/cost-meter/` 下，不会进入会话消息或所选工作区。其发布包中的 credentials 与 home-path 工具解析为插件私有的 `0.1.0-rc.6` 依赖，因此本次集成不会推进 Harness package 家族版本。
 
 随机服务端口只监听 `127.0.0.1`。这会阻止远程网络暴露，但不会对以同一本地用户身份运行的其他进程进行身份认证。在增加身份认证边界之前，不得通过代理暴露该端口，也不得将其重新绑定到 loopback 之外。
 
@@ -54,8 +56,10 @@ Web bundle 将 `dsh-client-ui-aqua` 固定为采用 MIT 许可的外部运行时
 
 **将 Aqua 复制或 vendoring 到应用内。** 不予采用：已发布 package 提供标准 Harness 客户端插件入口，并采用兼容的 MIT 许可。固定 npm 依赖可以保留其上游身份、完整性元数据和独立更新路径。
 
+**将计费插件复制到 Web bundle。** 不予采用：已发布 package 已将 Host 服务、客户端贡献、持久化和设置界面作为一个兼容的 Cordis 插件提供。精确固定 npm 版本可以保留上游许可与完整性元数据，也无需维护第二套实现。
+
 ## 后果
 
-应用能够以 Windows 桌面产品的形态构建、启动和关闭，同时复用完整 Web 界面。桌面测试固定标题栏选项和拖动区域，打包版启动 smoke 覆盖宿主进程，Web 浏览器 snapshot 覆盖 Aqua 设置与名录条目。宿主和外观层都不会增加模型可见行为。
+应用能够以 Windows 桌面产品的形态构建、启动和关闭，同时复用完整 Web 界面。桌面测试固定标题栏选项、内容避让、报告的拖动矩形和原生按钮回退排除区。打包版启动 smoke 覆盖宿主进程。Web 浏览器场景覆盖 Aqua、计费插件名录与设置贡献、Footer 顺序、空密钥字段和由实际 usage 更新的账本汇总。宿主和外观层都不会增加模型可见行为。
 
-安装包体积较大，插件树可在磁盘上检查，并且当前没有发布者证书或自动更新器。首个打包目标是 Windows x64；其他平台必须分别完成原生运行时与安装器验证，才能声明支持。Aqua 仍然是由 Web bundle 固定版本的第三方代码；采用后续版本时，必须像其他名录变更一样完成浏览器与打包运行时验证。
+安装包体积较大，插件树可在磁盘上检查，并且当前没有发布者证书或自动更新器。首个打包目标是 Windows x64；其他平台必须分别完成原生运行时与安装器验证，才能声明支持。Aqua 与计费插件仍然是由 Web bundle 固定版本的第三方代码；采用后续版本时，必须像其他名录变更一样完成浏览器与打包运行时验证。

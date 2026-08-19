@@ -12,6 +12,7 @@ dsh web GUI 的浏览器侧：shell 启动、浏览器与宿主通信、共享 U
 | [`connection/`](connection/README.md) | 维护浏览器与宿主之间的 RPC 通信和事件传递。 |
 | [`runtime/`](runtime/README.md) | 为会话、工作区和 UI 组合提供共享客户端服务。 |
 | [`hmr/`](hmr/README.md) | 在开发期间刷新客户端插件。 |
+| [`mobile-web/`](mobile-web/README.md) | 提供经过身份校验的局域网与临时公网手机浏览器访问。 |
 | [`locale/`](locale/README.md) | 提供本地化偏好与消息词典。 |
 | [`schema-form/`](schema-form/README.md) | 为设置编辑器提供 schema 驱动的草稿处理。 |
 | [`test-runtime/`](../test-support/client-runtime/README.md) | 为客户端功能包提供共享的仓库测试支持。 |

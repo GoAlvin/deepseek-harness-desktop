@@ -74,6 +74,11 @@ interface HistoryPage {
   hasMore: boolean
 }
 
+interface CostMeterState {
+  today: { calls: number; input: number; output: number; cost: number }
+  config: { customBalance?: { enabled?: boolean } }
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
@@ -284,6 +289,15 @@ describe('dsh web keyless CLI smoke', () => {
             "web_search",
           ]
         `)
+      let costState: CostMeterState | undefined
+      await expect.poll(async () => {
+        costState = await rpc<CostMeterState>(baseUrl, 'costMeter/getState', { args: {} })
+        return costState.today.calls
+      }, { timeout: 10_000 }).toBeGreaterThan(0)
+      expect(costState?.today.input).toBeGreaterThanOrEqual(3)
+      expect(costState?.today.output).toBeGreaterThanOrEqual(1)
+      expect(costState?.today.cost).toBeGreaterThan(0)
+      expect(costState?.config.customBalance?.enabled).toBe(false)
     } finally {
       const closed = child.exitCode === null
         ? new Promise<void>((resolveClose) => { child.once('close', () => { resolveClose() }) })

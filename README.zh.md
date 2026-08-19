@@ -10,10 +10,10 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 
 ## 下载
 
-从[最新桌面版 Release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.8)下载 Windows x64 安装包：
+从[最新桌面版 Release](https://github.com/GoAlvin/deepseek-harness-desktop/releases/tag/desktop-v0.1.0-rc.10)下载 Windows x64 安装包：
 
-- `DeepSeek-Harness-0.1.0-rc.8-x64.exe`
-- SHA-256：`C9076856499C78DCD51F4885B068AEEB128A7113A4300540F1E795FBECB7D9AD`
+- `DeepSeek-Harness-0.1.0-rc.10-x64.exe`
+- SHA-256：`DDD1A872452F8C6798D123BABFD79CFA4DC60D465DD47CBC022304B14BFBDF8D`
 
 安装包尚未进行代码签名，Windows SmartScreen 可能显示“未知发布者”警告。运行安装包前请核对 SHA-256 摘要。
 
@@ -26,9 +26,13 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 ## 功能
 
 - 在原生桌面窗口中提供完整的 DeepSeek Harness Web UI。
+- 提供无传统标题栏的 Windows 窗口、可靠拖动区域、原生窗口按钮和 Aqua 玻璃主题。
 - 由单一桌面应用负责后端启动、就绪检测、关闭与崩溃清理。
 - 使用 Windows 原生文件夹选择器，不向 renderer 暴露 Node 或 Electron API。
-- Harness 服务在随机本地端口上仅监听 loopback。
+- 集成 Cost Meter，统计会话、今日、本月和累计费用，并提供预算、余额、历史记录与 Token 用量。
+- 支持通过局域网或可选的 Cloudflare 临时公网隧道，从手机浏览器安全访问。
+- 提供手机访问总开关、公网隧道开关、二维码配对和可见的 cloudflared 下载进度。
+- 核心 Harness 服务在随机本地端口上仅监听 loopback。
 - 自定义应用、安装器、开始菜单与桌面快捷方式图标。
 - 打包 Koffi、Sharp、ripgrep 和 `node-pty` 原生运行时。
 - 支持用户级 Harness profile、设置、凭据与会话持久化。
@@ -36,6 +40,18 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 桌面宿主将所选工作区、本地后端和智能体能力统一置于仅限 loopback 的应用边界内。
 
 ![DeepSeek Harness Desktop 工作区与能力流程](assets/desktop-workflow.png)
+
+## 开源组件与插件
+
+| 组件 | 用途 | 源码 | 许可证与分发方式 |
+| --- | --- | --- | --- |
+| DeepSeek Harness | 智能体运行时、Web UI、CLI 与插件基础 | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness) | MIT；本仓库保留上游源码及其署名。 |
+| Aqua `dsh-client-ui-aqua@1.3.1` | 透明玻璃外观与主题设置 | [DSH-Transparent-UI-Plugin](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin) | MIT；固定使用上游 npm package，不复制或修改其源码。 |
+| Cost Meter `dsh-cost-meter@1.5.19` | 费用、用量、预算、余额、历史记录与 Token 统计 | [dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) | MIT；固定使用上游 npm package，不复制或修改其源码。 |
+| Mobile Web `@deepseek-ai/dsh-client-mobile-web` | 需要认证的局域网与公网手机浏览器访问 | [mobile-web 源码](packages/client/mobile-web/README.md) | MIT；完整源码由本仓库维护。 |
+| cloudflared `2026.8.2` | 可选的 Cloudflare 临时 Quick Tunnel | [cloudflare/cloudflared](https://github.com/cloudflare/cloudflared) | Apache-2.0；仅在开启公网访问后下载官方二进制，并校验其 SHA-256 摘要。 |
+
+第三方项目保留其原作者署名与许可证。手机访问流程参考了 [dsh-pocket](https://github.com/shaobeichen/dsh-pocket)，但本仓库没有包含或复制 dsh-pocket 源码。生成的依赖清单与许可证文本见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 <a id="run"></a>
 
@@ -79,6 +95,7 @@ pnpm run desktop:dist
 
 - [`apps/desktop/`](apps/desktop/)：Electron 主进程、打包配置、图标和安装版运行时 smoke 测试。
 - [`apps/cli/`](apps/cli/)：`dsh` profile 启动器，以及桌面宿主使用的父进程关闭路径。
+- [`packages/client/mobile-web/`](packages/client/mobile-web/)：需要认证的手机浏览器代理、配对界面与 Quick Tunnel 生命周期。
 - [`packages/`](packages/)：Harness 插件，包括桌面父进程目录选择器传输层。
 - [`docs/`](docs/)：用户、架构、开发与扩展文档。
 - [`vendor/`](vendor/)：从上游 Harness 继承的固定版本 Cordis 源码。
@@ -87,12 +104,15 @@ pnpm run desktop:dist
 
 renderer 禁用 Node 集成，启用上下文隔离和 Chromium sandbox，并拒绝权限请求。导航仅允许启动页文档和确切的本地 Harness origin；外部 HTTP 与 HTTPS 链接会在操作系统浏览器中打开。
 
-本地 Harness 服务仅监听 `127.0.0.1`。这可以防止远程网络访问，但不会认证以同一 Windows 用户身份运行的其他进程。不要通过代理将本地服务暴露出去，也不要将其重新绑定到 loopback 之外。
+核心 Harness 服务仅监听 `127.0.0.1`。这可以防止直接的远程网络访问，但不会认证以同一 Windows 用户身份运行的其他进程。
+
+手机访问使用独立的认证代理，并且默认关闭。开启总开关后会建立局域网监听；继续开启公网访问后，才会启动 Cloudflare 临时 Quick Tunnel。二维码和配对链接包含随机访问凭据：请只分享给预期用户，不要转发，并在使用完毕后关闭手机访问。Harness 凭据始终留在桌面端，不会发送给手机浏览器。
 
 ## 当前限制
 
 - 目前仅提供 Windows x64 打包目标。
 - 安装包没有发布者证书和自动更新器。
+- Cloudflare Quick Tunnel 链接是临时链接，不保证可用性；重新开启公网访问后，旧链接立即失效。
 - Harness profile Junction 无法指向 ASAR 虚拟文件系统中的 package，因此真实目录插件布局会产生体积较大且内容可检查的安装目录。
 - 项目沿用上游开发者预览兼容性策略，不同版本之间可能包含破坏性变更。
 

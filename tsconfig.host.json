@@ -288,6 +288,7 @@
     { "path": "./packages/host/frontend-static" },
     { "path": "./packages/host/plugin-inventory" },
     { "path": "./packages/host/webserver" },
+    { "path": "./packages/client/mobile-web/tsconfig.host.json" },
     { "path": "./packages/sdk/client" },
     { "path": "./packages/sdk/protocol" },
     { "path": "./packages/lsp/lsp" },

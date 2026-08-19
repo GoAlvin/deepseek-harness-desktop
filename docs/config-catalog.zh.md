@@ -430,6 +430,24 @@ export interface Config {
 
 来源：[`packages/client/hmr/src/index.ts:31`](../packages/client/hmr/src/index.ts)
 
+<a id="deepseek-aidsh-client-mobile-web"></a>
+
+## `@deepseek-ai/dsh-client-mobile-web`
+
+需要：`connection` · `webServer`
+
+```ts config-catalog
+/** Mobile Web deployment settings. */
+export interface Config {
+  /** First all-interface proxy port; zero asks the OS for a free port. */
+  proxyPort: number
+  /** Maximum wait for cloudflared to publish its public URL. */
+  tunnelStartupTimeoutMs: number
+}
+```
+
+来源：[`packages/client/mobile-web/src/index.ts:21`](../packages/client/mobile-web/src/index.ts)
+
 <a id="deepseek-aidsh-code-runtime-worker-thread"></a>
 
 ## `@deepseek-ai/dsh-code-runtime-worker-thread`

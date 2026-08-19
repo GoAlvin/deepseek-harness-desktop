@@ -1,0 +1,24 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib/types",
+    "tsBuildInfoFile": "lib/tsconfig.host.tsbuildinfo"
+  },
+  "files": [
+    "src/index.ts",
+    "src/invariant.ts",
+    "src/protocol.ts",
+    "src/proxy.ts",
+    "src/tunnel.ts"
+  ],
+  "references": [
+    { "path": "../../../vendor/cordis" },
+    { "path": "../../../vendor/schemastery" },
+    { "path": "../connection/tsconfig.host.json" },
+    { "path": "../../host/apiproxy" },
+    { "path": "../../host/webserver" },
+    { "path": "../../util/home-paths" },
+    { "path": "../../runtime-diagnostics/invariants" }
+  ]
+}

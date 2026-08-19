@@ -5,7 +5,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 import { app, BrowserWindow, dialog, Menu, session, shell } from 'electron'
 import { startHarnessBackend, type HarnessBackend } from './backend.ts'
 import { isAllowedNavigation, isExternalWebUrl } from './navigation.ts'
-import { WINDOW_DRAG_REGION_CSS, windowFrameOptions } from './window-frame.ts'
+import { systemProxyEnvironment } from './system-proxy.ts'
+import { windowFrameCss, windowFrameOptions } from './window-frame.ts'
 
 const APP_NAME = 'DeepSeek Harness'
 const SMOKE_FLAG = '--smoke-test'
@@ -14,12 +15,14 @@ const iconPath = join(assetsDirectory, process.platform === 'win32' ? 'icon.ico'
 const loadingPath = join(assetsDirectory, 'loading.html')
 const loadingUrl = pathToFileURL(loadingPath).href
 const smokeTest = process.argv.includes(SMOKE_FLAG)
+const cloudflaredDownloadUrl = 'https://github.com/cloudflare/cloudflared/releases/'
 
 let window: BrowserWindow | undefined
 let backend: HarnessBackend | undefined
 let backendStarting: Promise<HarnessBackend> | undefined
 let quitting: Promise<void> | undefined
 let allowQuit = false
+let backendEnvironment: NodeJS.ProcessEnv = process.env
 
 function focusMainWindow(): void {
   if (window === undefined || window.isDestroyed()) return
@@ -69,6 +72,7 @@ function installMenu(): void {
 }
 
 function createWindow(): BrowserWindow {
+  const frameCss = windowFrameCss(process.platform)
   const created = new BrowserWindow({
     width: 1440,
     height: 920,
@@ -102,7 +106,8 @@ function createWindow(): BrowserWindow {
   })
   created.webContents.on('will-attach-webview', (event) => { event.preventDefault() })
   created.webContents.on('did-finish-load', () => {
-    void created.webContents.insertCSS(WINDOW_DRAG_REGION_CSS).catch((error: unknown) => {
+    if (frameCss === '') return
+    void created.webContents.insertCSS(frameCss).catch((error: unknown) => {
       console.error('DeepSeek Harness desktop: failed to install the window drag region', error)
     })
   })
@@ -116,6 +121,7 @@ function createWindow(): BrowserWindow {
     executable: process.execPath,
     cwd: app.getPath('home'),
     harnessHome: join(app.getPath('userData'), 'harness'),
+    environment: backendEnvironment,
     async pickDirectory(title) {
       const options: Electron.OpenDialogOptions = { title, properties: ['openDirectory'] }
       const result = created.isDestroyed()
@@ -196,6 +202,12 @@ if (!ownsInstance) {
 
   void app.whenReady().then(() => {
     session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => { callback(false) })
+    return session.defaultSession.resolveProxy(cloudflaredDownloadUrl).catch((error: unknown) => {
+      console.warn('DeepSeek Harness desktop: system proxy discovery failed; using inherited network settings', error)
+      return 'DIRECT'
+    })
+  }).then((rules) => {
+    backendEnvironment = { ...process.env, ...systemProxyEnvironment(rules) }
     installMenu()
     window = createWindow()
   }).catch((error: unknown) => {

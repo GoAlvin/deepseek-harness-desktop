@@ -162,6 +162,14 @@
         # its literals, for example: ['app.internal', ...ctx.webRuntime.trustedHosts].
         trustedHosts: !!js ctx.webRuntime.trustedHosts
 
+    # Authenticated phone-browser access: a LAN proxy starts with the Web
+    # profile; Settings may add a temporary Cloudflare HTTPS tunnel.
+    - id: mobile-web
+      name: '@deepseek-ai/dsh-client-mobile-web'
+      config:
+        proxyPort: 3081
+        tunnelStartupTimeoutMs: 45000
+
     - id: api-remotes
       name: '@deepseek-ai/dsh-api-remotes'
 
@@ -267,6 +275,10 @@
     # Settings > Plugins, with wallpaper and motion controls under Appearance.
     - id: ui-aqua
       name: 'dsh-client-ui-aqua'
+
+    # Local cost ledger and sidebar footer entry; credentials stay on Host.
+    - id: cost-meter
+      name: 'dsh-cost-meter'
 
     # Plan control: the composer plan seat over the plan projection + /plan channel.
     - id: ui-plan

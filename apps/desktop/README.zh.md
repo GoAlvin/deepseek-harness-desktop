@@ -20,13 +20,17 @@
 
 ## 窗口与外观
 
-在 Windows 上，Electron 会隐藏普通标题栏，并通过 Window Controls Overlay 保留原生最小化、最大化和关闭按钮。窗口顶部的 8 像素拖动区域可用于移动窗口，同时不会让 Harness 工具栏或侧边栏控件失去点击能力。renderer 仍然不会获得 Electron bridge。
+在 Windows 上，Electron 会隐藏普通标题栏，并通过 Window Controls Overlay 保留原生最小化、最大化和关闭按钮。顶部 36 像素透明带使用 Chromium 报告的 `titlebar-area-*` 矩形作为拖动区域；无法取得该信息时，会在右侧为原生按钮预留 144 像素。Web 界面从透明带下方开始，因此侧边栏、会话标题区和 `Session log` 操作不会与窗口按钮重叠。renderer 仍然不会获得 Electron bridge。其他平台保留各自的隐藏标题栏方式，不采用 Windows 避让尺寸。
 
 Web profile 内置采用 MIT 许可的 [Aqua 外观插件](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin)。Aqua 默认开启，可提供玻璃材质、流体或自定义图片／视频背景、亮度与模糊调节、粒子鲸鱼、海洋环境装饰和指针效果。总开关位于**设置 → 插件 → 玻璃主题**，详细调节项位于**设置 → 通用设置 → 外观**。关闭总开关即可恢复原生界面，不会改变桌面宿主。
+
+该 profile 还将采用 MIT 许可的 [dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) 固定在 `1.5.19`。侧边栏摘要紧邻设置按钮上方；完整账本、会话与汇总费用、预算、余额与 Coding Plan 查询、历史记录、Token 热图、峰谷计价和价格同步位于**设置 → 费用**。会话费用默认显示在输入区下方。Harness 在 Host 端解析供应商密钥，不会把密钥值发送到浏览器；自定义余额端点只有经用户配置后才会启用。账本存放在 `$DSH_HOME/storages/cost-meter/ledger.json`，不会写入工作区或会话正文。
 
 ## 运行时约定
 
 Electron 主进程在随机 `127.0.0.1` 端口上启动已构建的 [`dsh web`](../cli/README.md) profile。桌面应用自有的 Harness 状态存储在 Electron 的用户级应用数据目录下，具体位于 `harness/`；除非继承环境显式覆盖 `DSH_TELEMETRY_DISABLED`，否则遥测保持关闭。
+
+启动 profile 前，Electron 会解析操作系统针对官方 `cloudflared` Release 地址使用的代理。如果继承环境没有 `HTTPS_PROXY` 或 `HTTP_PROXY`，桌面宿主会把受支持的系统 HTTP/HTTPS 代理传给后端。这样，可选的公网访问下载可以沿用桌面浏览器使用的 Windows 代理，同时不会向 renderer 暴露代理凭据。
 
 后端会收到一个 Node IPC 通道。关闭窗口时，桌面宿主会请求在限定时间内处置完整 profile 树；父进程意外断开时，也会触发同一条 CLI 关闭路径。同一条仅由父进程掌握的通道还会把原生目录选择请求交给 Electron；Electron 使用自身的系统对话框，并且只返回所选路径或取消结果。启动失败、后端提前退出和关闭超时都会保持为显式失败状态，不会留下脱管后台进程。
 
@@ -42,7 +46,7 @@ Harness HTTP 服务仅监听 loopback。对于已经以同一本地用户身份�
 
 `pnpm run test:desktop` 覆盖后端 URL 校验、导航策略、无标题栏窗口选项、由父进程负责的 CLI 关闭以及桌面选择器 IPC 生命周期。桌面可执行文件接受 `--smoke-test`，执行隐藏的启动、加载与关闭检查。`tests/packaged-native-smoke.cjs` 验证 Windows 打包运行时能够加载 Koffi、Sharp、ripgrep 和 `node-pty`；选择器 smoke 分别覆盖独立 fallback worker 和完整 Electron 父进程后端 RPC 路径。
 
-桌面壳不会改变模型可见行为。Web 浏览器 snapshot 覆盖组装后的 Aqua 设置和插件名录；Electron 与打包原生模块 smoke 覆盖宿主进程与窗口行为。
+桌面壳不会改变模型可见行为。Web 浏览器场景覆盖组装后的 Aqua 设置、费用分节、侧边栏顺序、空密钥字段和由实际 usage 更新的账本汇总；Electron 与打包原生模块 smoke 覆盖宿主进程与窗口行为。
 
 ## 当前限制
 

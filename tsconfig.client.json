@@ -54,6 +54,7 @@
     { "path": "./packages/client/web-react" },
     { "path": "./packages/client/modules" },
     { "path": "./packages/client/hmr" },
+    { "path": "./packages/client/mobile-web/tsconfig.client.json" },
     { "path": "./packages/client/connection/tsconfig.client.json" },
     { "path": "./packages/typert/registry" },
     { "path": "./packages/api/gateway/tsconfig.client.json" },

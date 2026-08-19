@@ -12,6 +12,7 @@ The browser side of the dsh web GUI: shell boot, browser-host communication, sha
 | [`connection/`](connection/README.md) | Maintains browser-host RPC communication and event delivery. |
 | [`runtime/`](runtime/README.md) | Provides shared client services for sessions, workspaces, and UI composition. |
 | [`hmr/`](hmr/README.md) | Refreshes client plugins during development. |
+| [`mobile-web/`](mobile-web/README.md) | Provides authenticated LAN and temporary public phone-browser access. |
 | [`locale/`](locale/README.md) | Provides localization preferences and message dictionaries. |
 | [`schema-form/`](schema-form/README.md) | Provides schema-backed draft handling for settings editors. |
 | [`test-runtime/`](../test-support/client-runtime/README.md) | Provides shared repository test support for client feature packages. |

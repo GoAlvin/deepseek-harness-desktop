@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { WINDOWS_TITLE_BAR_OPTIONS, WINDOW_DRAG_REGION_CSS, windowFrameOptions } from '../src/window-frame.ts'
+import { WINDOWS_FRAME_CSS, WINDOWS_TITLE_BAR_OPTIONS, windowFrameCss, windowFrameOptions } from '../src/window-frame.ts'
 
 describe('desktop window frame', () => {
   it('replaces the Windows title bar with the native controls overlay', () => {
@@ -15,9 +15,17 @@ describe('desktop window frame', () => {
     expect(windowFrameOptions('linux')).toEqual({ titleBarStyle: 'hidden' })
   })
 
-  it('keeps the drag target narrow and clear of the native control buttons', () => {
-    expect(WINDOW_DRAG_REGION_CSS).toContain('-webkit-app-region: drag')
-    expect(WINDOW_DRAG_REGION_CSS).toContain('height: 8px')
-    expect(WINDOW_DRAG_REGION_CSS).toContain('right: 144px')
+  it('reserves the Windows overlay and uses its reported draggable rectangle', () => {
+    expect(windowFrameCss('win32')).toBe(WINDOWS_FRAME_CSS)
+    expect(WINDOWS_FRAME_CSS).toContain('padding-top: var(--dsh-desktop-titlebar-height)')
+    expect(WINDOWS_FRAME_CSS).toContain('env(titlebar-area-height, 36px)')
+    expect(WINDOWS_FRAME_CSS).toContain('env(titlebar-area-x, 0px)')
+    expect(WINDOWS_FRAME_CSS).toContain('env(titlebar-area-width, calc(100% - 144px))')
+    expect(WINDOWS_FRAME_CSS).toContain('-webkit-app-region: drag')
+  })
+
+  it('does not apply Windows control dimensions on other platforms', () => {
+    expect(windowFrameCss('darwin')).toBe('')
+    expect(windowFrameCss('linux')).toBe('')
   })
 })

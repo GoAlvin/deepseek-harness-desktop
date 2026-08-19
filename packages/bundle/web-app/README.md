@@ -8,6 +8,14 @@ The dsh browser-surface bundle. [`cordis.patch.yml`](cordis.patch.yml) rides ove
 
 The shipped roster enables the external MIT-licensed [Aqua plugin](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin). It adds a reversible glass-material layer and appearance controls without changing model requests or session data. A person can disable the layer under **Settings → Plugins → Glass theme** and adjust its material, background, ambient, and pointer effects under **Settings → General → Appearance**.
 
+## Cost accounting
+
+The roster pins the external MIT-licensed [dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) at `1.5.19`. It places today's cost immediately above Settings, keeps per-session cost below the composer by default, and provides aggregate costs, budgets, official balance and Coding Plan queries, history, a token heat map, peak pricing, custom-provider balance support, and price synchronization under **Settings → Cost**. Provider secrets resolve through the Host credentials service and are not sent to the browser. Custom balance queries are disabled by default. The local ledger is `$DSH_HOME/storages/cost-meter/ledger.json`; it does not modify workspace files or session messages.
+
+## Phone browser access
+
+The roster mounts [`dsh-client-mobile-web`](../../client/mobile-web/README.md). **Settings → Phone access** presents an authenticated local-network QR and an opt-in temporary public HTTPS QR. Its master action closes both transports and invalidates their links. Public access runs a pinned Cloudflare Quick Tunnel, and its optional binary download reports byte and transfer-rate progress; this is a browser surface, not a mobile application.
+
 ## Model Experience
 
 ### Harness-source and Web-surface context

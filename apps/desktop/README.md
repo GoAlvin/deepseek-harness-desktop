@@ -20,13 +20,17 @@ This workspace package remains private because the supported distribution is the
 
 ## Window and appearance
 
-On Windows, Electron hides the ordinary title row and keeps its native minimize, maximize, and close buttons in a Window Controls Overlay. An 8-pixel drag strip at the top moves the window without making the Harness toolbar or sidebar controls unclickable. The renderer still receives no Electron bridge.
+On Windows, Electron hides the ordinary title row and keeps its native minimize, maximize, and close buttons in a Window Controls Overlay. A transparent 36-pixel band uses Chromium's reported `titlebar-area-*` rectangle as its drag target and falls back to reserving 144 pixels for the native buttons. The Web surface starts below the band, so its sidebar, session header, and `Session log` action cannot overlap the window controls. The renderer still receives no Electron bridge. Other platforms keep their native hidden-title treatment without the Windows inset.
 
 The Web profile includes the MIT-licensed [Aqua appearance plugin](https://github.com/WYH66666666/DSH-Transparent-UI-Plugin). Aqua starts enabled and provides glass material, fluid or custom image/video backgrounds, brightness and blur controls, a particle whale, ambient marine decorations, and pointer effects. Its master switch is under **Settings → Plugins → Glass theme**; the detailed controls are under **Settings → General → Appearance**. Turning the master switch off restores the stock interface without changing the desktop host.
+
+The profile also pins the MIT-licensed [dsh-cost-meter](https://github.com/Han-1413141/dsh-cost-meter) at `1.5.19`. Its sidebar summary sits immediately above Settings, while the complete ledger, session and aggregate costs, budgets, balance and Coding Plan queries, history, token heat map, peak pricing, and price synchronization live under **Settings → Cost**. Session cost remains below the composer by default. Harness resolves provider secrets on the Host; secret values are not sent to the browser, and the custom balance endpoint remains disabled until a person configures it. The ledger is stored at `$DSH_HOME/storages/cost-meter/ledger.json`, outside workspaces and session transcripts.
 
 ## Runtime contract
 
 The Electron main process starts the built [`dsh web`](../cli/README.md) profile on a random `127.0.0.1` port. It stores desktop-owned Harness state below Electron's per-user application-data directory, under `harness/`, and disables telemetry unless `DSH_TELEMETRY_DISABLED` is explicitly overridden in the inherited environment.
+
+Before starting the profile, Electron resolves the operating system's proxy for the official `cloudflared` release URL. When the inherited environment has no `HTTPS_PROXY` or `HTTP_PROXY`, the desktop host passes a supported system HTTP/HTTPS proxy to the backend. This lets the optional public-access download follow the same Windows proxy used by the desktop browser without exposing proxy credentials to the renderer.
 
 The backend receives a Node IPC channel. Closing the window requests bounded whole-profile disposal; an unexpected parent disconnect triggers the same CLI shutdown path. The same authenticated-by-parent channel carries native directory-picker requests to Electron, which uses its own system dialog and returns only the selected path or cancellation. Startup failure, early backend exit, and shutdown timeout remain explicit failure states rather than detached background processes.
 
@@ -42,7 +46,7 @@ The Harness HTTP server listens only on loopback. It is not an authentication bo
 
 `pnpm run test:desktop` covers backend URL validation, navigation policy, frameless-window options, parent-owned CLI shutdown, and the desktop picker IPC lifecycle. The desktop executable accepts `--smoke-test` for a hidden startup/load/shutdown pass. `tests/packaged-native-smoke.cjs` verifies the packaged Windows runtime can load Koffi, Sharp, ripgrep, and `node-pty`; the picker smokes cover the standalone fallback worker and the complete Electron-parent backend RPC path.
 
-The desktop shell does not change model-visible behavior. Web browser snapshots cover the assembled Aqua settings and plugin inventory; the Electron and packaged-native smokes cover the host process and window behavior.
+The desktop shell does not change model-visible behavior. Web browser scenarios cover the assembled Aqua settings, Cost section, sidebar ordering, empty secret fields, and usage-driven ledger totals; Electron and packaged-native smokes cover the host process and window behavior.
 
 ## Current limitations
 

@@ -2,8 +2,9 @@
   "name": "@deepseek-ai/dsh-desktop",
   "description": "Independent Electron desktop distribution for the DeepSeek Harness Web UI",
   "author": "GoAlvin",
-  "version": "0.1.0-rc.8",
+  "version": "0.1.0-rc.10",
   "private": true,
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GoAlvin/deepseek-harness-desktop.git",

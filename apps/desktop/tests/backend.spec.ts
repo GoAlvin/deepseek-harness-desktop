@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import { extractBackendUrl, formatBackendExit, serviceDesktopDirectoryPickerRequest } from '../src/backend.ts'
+import { systemProxyEnvironment } from '../src/system-proxy.ts'
 
 describe('desktop backend protocol', () => {
   it('extracts only a complete loopback ready line', () => {
@@ -48,5 +49,16 @@ describe('desktop backend protocol', () => {
     )).resolves.toBe(false)
     expect(pick).not.toHaveBeenCalled()
     expect(reply).not.toHaveBeenCalled()
+  })
+
+  it('passes a supported system proxy to downloads without overriding explicit proxy settings', () => {
+    expect(systemProxyEnvironment('PROXY 127.0.0.1:7890; DIRECT', {})).toEqual({
+      HTTPS_PROXY: 'http://127.0.0.1:7890/',
+    })
+    expect(systemProxyEnvironment('HTTPS proxy.example:443; DIRECT', {})).toEqual({
+      HTTPS_PROXY: 'https://proxy.example/',
+    })
+    expect(systemProxyEnvironment('SOCKS5 127.0.0.1:1080; DIRECT', {})).toEqual({})
+    expect(systemProxyEnvironment('PROXY system.example:80', { HTTPS_PROXY: 'http://explicit.example:8080' })).toEqual({})
   })
 })
