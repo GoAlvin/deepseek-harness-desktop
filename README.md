@@ -41,6 +41,26 @@ The desktop host keeps the selected workspace, local backend, and agent capabili
 
 ![DeepSeek Harness Desktop workspace and capability flow](assets/desktop-workflow.png)
 
+## Feature gallery
+
+### Aqua workspace
+
+The Aqua plugin applies the glass appearance across the frameless desktop window while keeping workspace navigation, the composer, Cost Meter cards, and native window controls usable.
+
+![Aqua workspace with integrated Cost Meter cards](assets/desktop-aqua-workspace.png)
+
+### Cost Meter
+
+The Cost Meter settings show current pricing periods, daily and monthly totals, per-session usage, budgets, balances, and history in one view.
+
+![Cost Meter statistics and settings](assets/desktop-cost-meter.png)
+
+### Phone browser access
+
+Phone Access provides an authenticated LAN QR code and an independently controlled temporary public tunnel. The access credential is removed from this public screenshot.
+
+![Authenticated phone browser access settings with credential redacted](assets/desktop-phone-access.png)
+
 ## Open-source components and plugins
 
 | Component | Purpose | Source | License and distribution |

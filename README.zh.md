@@ -41,6 +41,26 @@ DeepSeek Harness Desktop 是一个独立开源的 Windows 桌面发行项目，�
 
 ![DeepSeek Harness Desktop 工作区与能力流程](assets/desktop-workflow.png)
 
+## 功能实拍
+
+### Aqua 工作台
+
+Aqua 插件将玻璃外观应用到无传统标题栏的桌面窗口，同时保持工作区导航、输入区、Cost Meter 卡片和原生窗口按钮正常可用。
+
+![集成 Cost Meter 卡片的 Aqua 工作台](assets/desktop-aqua-workspace.png)
+
+### Cost Meter
+
+Cost Meter 设置页集中展示当前计价时段、今日与本月费用、会话用量、预算、余额和历史记录。
+
+![Cost Meter 费用统计与设置](assets/desktop-cost-meter.png)
+
+### 手机浏览器访问
+
+手机访问提供需要认证的局域网二维码和独立控制的临时公网隧道。公开截图已移除访问凭据。
+
+![已隐藏访问凭据的手机浏览器访问设置](assets/desktop-phone-access.png)
+
 ## 开源组件与插件
 
 | 组件 | 用途 | 源码 | 许可证与分发方式 |
